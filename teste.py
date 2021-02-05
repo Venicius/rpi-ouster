@@ -1,8 +1,9 @@
 import csv
 from datetime import datetime
 
-def handler(datetime):
-    with open('Raw_' + str(datetime) +'.txt', 'a') as f:
+def handler():
+    filename = 'Raw_' + str(getDateTime()) + '.txt'
+    with open(filename, 'a') as f:
         writer = csv.writer(f, delimiter=' ')
         print("Running")
         writer.writerow("*------------------------------------------------------*")
@@ -17,7 +18,7 @@ def getDateTime():
     return now
 
 
-handler(getDateTime())
+handler()
 
 
 
