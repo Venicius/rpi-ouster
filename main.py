@@ -6,24 +6,23 @@ from datetime import datetime
 
 
 def handler(raw_packet):
-    #filename = 'Raw_' + str(getDateTime()) + '.txt'
-    with open("saida-teste2.txt", 'a') as f:
+    filename = 'Raw_' + str(getDateTime()) + '.txt'
+    with open(filename, 'a') as f:
         ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
             raw_packet)
-        f.write("*------------------------------------------------------* \n")
-        f.write("timeStamp: " + str(timeStamp[0]) + "measurementID : " +
-                str(measurementID[0]) + "frameID : " + str(frameID[0]) +
-                "amazimuthDataBlockStatus 1" + "\n")
-
         for data in zip(ch, ch_range, encoderCount, reflectivity, intensity, x,
                         y, z, noise):
+            f.write("*------------------------------------------------------* \n")
+            f.write("timeStamp: " + str(timeStamp[0]) + "measurementID : " +
+                str(measurementID[0]) + "frameID : " + str(frameID[0]) +
+                "amazimuthDataBlockStatus 1" + "\n")
             f.write(str(data) + "\n")
             print(str(data))
 
 
 def getDateTime():
     now = datetime.now()
-    date_time = now.strftime("%m%d%Y_%H%M%S")
+    date_time = now.strftime("%m%d%Y_%H%M")
     print("Running at", date_time)
     return date_time
 
