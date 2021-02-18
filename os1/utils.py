@@ -2,20 +2,12 @@ import math
 import struct
 import sys
 
-from os1.packet import (
-    AZIMUTH_BLOCK_COUNT,
-    CHANNEL_BLOCK_COUNT,
-    azimuth_angle,
-    azimuth_block,
-    azimuth_measurement_id,
-    azimuth_timestamp,
-    azimuth_valid,
-    channel_block,
-    channel_range,
-    unpack,
-    azimuth_encoder_count,
-    azimuth_frame_id
-)
+from os1.packet import (AZIMUTH_BLOCK_COUNT, CHANNEL_BLOCK_COUNT,
+                        azimuth_angle, azimuth_block, azimuth_measurement_id,
+                        azimuth_timestamp, azimuth_valid, channel_block,
+                        channel_range, unpack, azimuth_encoder_count,
+                        azimuth_frame_id, channel_reflectivity,
+                        channel_signal_photons, channel_noise_photons)
 
 # The OS-16 will still contain 64 channels in the packet, but only
 # every 4th channel starting at the 2nd will contain data .
@@ -28,8 +20,7 @@ class UninitializedTrigTable(Exception):
         msg = (
             "You must build_trig_table prior to calling xyz_point or"
             "xyz_points.\n\n"
-            "This is likely because you are in a multiprocessing environment."
-        )
+            "This is likely because you are in a multiprocessing environment.")
         super(UninitializedTrigTable, self).__init__(msg)
 
 
@@ -39,13 +30,11 @@ _trig_table = []
 def build_trig_table(beam_altitude_angles, beam_azimuth_angles):
     if not _trig_table:
         for i in range(CHANNEL_BLOCK_COUNT):
-            _trig_table.append(
-                [
-                    math.sin(beam_altitude_angles[i] * math.radians(1)),
-                    math.cos(beam_altitude_angles[i] * math.radians(1)),
-                    beam_azimuth_angles[i] * math.radians(1),
-                ]
-            )
+            _trig_table.append([
+                math.sin(beam_altitude_angles[i] * math.radians(1)),
+                math.cos(beam_altitude_angles[i] * math.radians(1)),
+                beam_azimuth_angles[i] * math.radians(1),
+            ])
 
 
 def xyz_point(channel_n, azimuth_block):
@@ -107,6 +96,13 @@ def xyz_points_raw(packet, os16=False):
     encoderCount = []
     measurementID = []
     frameID = []
+    x = []
+    y = []
+    z = []
+    ch_range = []
+    reflectivity = []
+    intensity = []
+    noise = []
 
     for b in range(AZIMUTH_BLOCK_COUNT):
         block = azimuth_block(b, packet)
@@ -115,13 +111,22 @@ def xyz_points_raw(packet, os16=False):
             continue
 
         for c in channels:
+            channel = channel_block(c, block)
             ch.append(c)
+            ch_range.append(channel_range(channel))
             timeStamp.append(azimuth_timestamp(block))
             encoderCount.append(azimuth_encoder_count(block))
             measurementID.append(azimuth_measurement_id(block))
             frameID.append(azimuth_frame_id(block))
+            point = xyz_point(c, block)
+            x.append(point[0])
+            y.append(point[1])
+            z.append(point[2])
+            reflectivity.append(channel_reflectivity(channel))
+            intensity.append(channel_signal_photons(channel))
+            noise.append(channel_noise_photons(channel))
 
-    return ch, timeStamp, encoderCount, measurementID, frameID
+    return ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise
 
 
 def xyz_columns(packet, os16=False):

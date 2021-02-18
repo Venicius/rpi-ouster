@@ -1,7 +1,7 @@
 import math
 import struct
 
-PACKET_SIZE = 12608
+PACKET_SIZE = 24896
 TICKS_PER_REVOLUTION = 90112
 AZIMUTH_BLOCK_COUNT = 16  # Azimuth blocks per packet
 CHANNEL_BLOCK_COUNT = 128  # Channel blocks per Azimuth block
@@ -36,7 +36,7 @@ def unpack(raw_packet):
 
 def azimuth_block(n, packet):
     offset = n * AZIMUTH_BLOCK_SIZE
-    return packet[offset : offset + AZIMUTH_BLOCK_SIZE]
+    return packet[offset:offset + AZIMUTH_BLOCK_SIZE]
 
 
 def azimuth_timestamp(azimuth_block):
@@ -65,7 +65,7 @@ def azimuth_valid(azimuth_block):
 
 def channel_block(n, azimuth_block):
     offset = 4 + n * CHANNEL_BLOCK_SIZE
-    return azimuth_block[offset : offset + CHANNEL_BLOCK_SIZE]
+    return azimuth_block[offset:offset + CHANNEL_BLOCK_SIZE]
 
 
 def channel_range(channel_block):
