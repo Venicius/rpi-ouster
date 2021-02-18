@@ -10,14 +10,18 @@ def handler(raw_packet):
     with open(filename, 'a') as f:
         ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
             raw_packet)
-        for data in zip(ch, ch_range, encoderCount, reflectivity, intensity, x,
+        for vetorDadosColetados in zip(ch, ch_range, encoderCount, reflectivity, intensity, x,
                         y, z, noise):
             f.write("*------------------------------------------------------* \n")
             f.write("timeStamp: " + str(timeStamp[0]) + "measurementID : " +
                 str(measurementID[0]) + "frameID : " + str(frameID[0]) +
                 "amazimuthDataBlockStatus 1" + "\n")
-            f.write(str(data) + "\n")
-            print(str(data))
+            linhaImpressaNoArquivo = str(vetorDadosColetados)
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(')', ' ')
+            f.write(linhaImpressaNoArquivo + "\n")
+            print(linhaImpressaNoArquivo)
 
 
 def getDateTime():
