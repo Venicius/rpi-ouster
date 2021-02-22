@@ -7,37 +7,42 @@ from datetime import datetime
 
 def handler(raw_packet):
     filename = 'Raw_' + str(getDateTime()) + '.txt'
+    print("Generating output in " + filename)
     with open(filename, 'a') as f:
         ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
             raw_packet)
-        for vetorDadosColetados in zip(ch, ch_range, encoderCount, reflectivity, intensity, x,
-                        y, z, noise):
-            f.write("*------------------------------------------------------* \n")
-            f.write("timeStamp: " + str(timeStamp[0]) + "measurementID : " +
-                str(measurementID[0]) + "frameID : " + str(frameID[0]) +
-                "amazimuthDataBlockStatus 1" + "\n")
+
+        # f.write(
+            # "channel | range | encoderCount | reflectivity | intensity | x | y | z | noise | timeStamp  | measurementID | frameID \n"
+        # )
+        # f.write("timeStamp: " + str(timeStamp[0]) + " measurementID: " +
+        #         str(measurementID[0]) + " frameID: " + str(frameID[0]) +
+        #         " amazimuthDataBlockStatus 1" + "\n")
+
+        for vetorDadosColetados in zip(ch, ch_range, encoderCount,
+                                       reflectivity, intensity, x, y, z,
+                                       noise):
+                                       if(ch==0):
+                                           f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " +
+                    str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
+
             linhaImpressaNoArquivo = str(vetorDadosColetados)
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(')', ' ')
             f.write(linhaImpressaNoArquivo + "\n")
-            print(linhaImpressaNoArquivo)
 
 
 def getDateTime():
     now = datetime.now()
-    date_time = now.strftime("%m%d%Y_%H%M")
+    date_time = now.strftime("%m%d%Y_%H")
     print("Running at", date_time)
     return date_time
 
 
 def startOuster():
-    # OS1 sensor IP, destination IP, and resolution
     os1 = OS1('10.5.5.86', '10.5.5.1', mode='1024x10')
-    # Inform the sensor of the destination host and reintialize it
     os1.start()
-    # Start the loop which will handle and dispatch each packet to the handler
-    # function for processing
     os1.run_forever(handler)
 
 
