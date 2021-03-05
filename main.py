@@ -11,13 +11,9 @@ def handler(raw_packet):
         ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
             raw_packet)
 
-        for vetorDadosColetados in zip(ch, ch_range, encoderCount,
-                                       reflectivity, intensity, x, y, z,
-                                       noise):
-            if ch == 0:
-                f.write("TimeStamp: " + str(timeStamp[0]) +
-                        " measurementID: " + str(measurementID[0]) +
-                        " frameID: " + str(frameID[0]) + "\n")
+        f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
+        for vetorDadosColetados in zip(ch, ch_range, encoderCount, reflectivity, intensity, x, y, z noise):
+
             linhaImpressaNoArquivo = str(vetorDadosColetados)
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
@@ -33,7 +29,7 @@ def getdatetime():
 
 
 def startouster():
-    os1 = OS1('10.5.5.86', '10.5.5.1', mode='1024x10')
+    os1 = OS1('10.5.5.86', '10.5.5.1', mode='2048x10')
     os1.start()
     os1.run_forever(handler)
 
