@@ -9,17 +9,20 @@ OS1_IP = '10.5.5.86'
 HOST_IP = '10.5.5.1'
 unprocessed_packets = Queue()
 
+
 def handler(packet):
     unprocessed_packets.put(packet)
 
 
-def worker(queue, beam_altitude_angles, beam_azimuth_angles) :
+def worker(queue, beam_altitude_angles, beam_azimuth_angles):
     build_trig_table(beam_altitude_angles, beam_azimuth_angles)
     while True:
         packet = queue.get()
-        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = raw_values(packet)
-        print_lines(ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise)
-        
+        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = raw_values(
+            packet)
+        print_lines(ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z,
+                    noise)
+
 
 def spawn_workers(n, worker, *args, **kwargs):
     processes = []
@@ -38,8 +41,9 @@ def print_lines(ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, 
     filename = 'Raw_' + str(getdatetime()) + '.txt'
     print("Generating output in " + filename)
     with open(filename, 'a') as f:
-        f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
-        for vetorDadosColetados in zip(ch, ch_range, encoderCount, reflectivity, intensity, x, y, z noise):
+        f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(
+            frameID[0]) + "\n")
+        for vetorDadosColetados in zip(ch, ch_range, encoderCount, reflectivity, intensity, x, y, z, noise):
             linhaImpressaNoArquivo = str(vetorDadosColetados)
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
@@ -54,7 +58,6 @@ def getdatetime():
     return date_time
 
 
-
 def startouster():
     os1 = OS1(OS1_IP, HOST_IP)
     beam_intrinsics = json.loads(os1.get_beam_intrinsics())
@@ -64,9 +67,11 @@ def startouster():
     os1.start()
     try:
         os1.run_forever(handler)
-        except KeyboardInterrupt:
-            for w in workers:
-                w.terminate()
+    except KeyboardInterrupt:
+        for w in workers:
+            w.terminate()
+    finally:
+        print("Programa finalizado!")
 
 
 while True:
@@ -76,4 +81,3 @@ while True:
         startouster()
         print("running")
         break
-
