@@ -27,7 +27,7 @@ def handler(raw_packet):
 
 def getdatetime():
     now = datetime.now()
-    date_time = now.strftime("%m%d%Y_%H")
+    date_time = now.strftime("%m%d%Y_%H%M")
     print("Running at", date_time)
     return date_time
 
