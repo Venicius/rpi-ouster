@@ -1,4 +1,5 @@
 from os1 import OS1
+from imu import OS1_IMU
 from os1.utils import xyz_points, xyz_points_raw
 import csv
 import os
@@ -6,6 +7,26 @@ from datetime import datetime
 
 
 def handler(raw_packet):
+    filename = 'Raw_' + str(getDateTime()) + '.txt'
+    print("Generating output in " + filename)
+    with open(filename, 'a') as f:
+        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
+            raw_packet)
+
+        for vetorDadosColetados in zip(ch, ch_range, encoderCount,
+                                       reflectivity, intensity, x, y, z,
+                                       noise):
+                                       if(ch==0):
+                                           f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
+
+            linhaImpressaNoArquivo = str(vetorDadosColetados)
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(')', ' ')
+            f.write(linhaImpressaNoArquivo + "\n")
+
+            
+def handlerImu(raw_packet):
     filename = 'Raw_' + str(getDateTime()) + '.txt'
     print("Generating output in " + filename)
     with open(filename, 'a') as f:
@@ -23,8 +44,7 @@ def handler(raw_packet):
                                        reflectivity, intensity, x, y, z,
                                        noise):
                                        if(ch==0):
-                                           f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " +
-                    str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
+                                           f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
 
             linhaImpressaNoArquivo = str(vetorDadosColetados)
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
@@ -35,7 +55,7 @@ def handler(raw_packet):
 
 def getDateTime():
     now = datetime.now()
-    date_time = now.strftime("%m%d%Y_%H")
+    date_time = now.strftime("%m%d%Y_%H%M")
     print("Running at", date_time)
     return date_time
 
@@ -46,10 +66,15 @@ def startOuster():
     os1.run_forever(handler)
 
 
+def startOusterImu():
+    imu = OS1_IMU('10.5.5.86', '10.5.5.1', mode='1024x10')
+    imu.start()
+    imu.run_forever(handler)
+
+
 while True:
     hostname = "10.5.5.86"
     response = os.system("ping -c 1 " + hostname)
     if response == 0:
         startOuster()
-        print("running")
         break

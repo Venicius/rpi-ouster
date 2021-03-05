@@ -2,20 +2,11 @@ import math
 import struct
 import sys
 
-from os1.packet import (
-    AZIMUTH_BLOCK_COUNT,
-    CHANNEL_BLOCK_COUNT,
-    azimuth_angle,
-    azimuth_block,
-    azimuth_measurement_id,
-    azimuth_timestamp,
-    azimuth_valid,
-    channel_block,
-    channel_range,
-    unpack,
-    azimuth_encoder_count,
-    azimuth_frame_id
-)
+from imu.packet import (AZIMUTH_BLOCK_COUNT, CHANNEL_BLOCK_COUNT,
+                        azimuth_angle, azimuth_block, azimuth_measurement_id,
+                        azimuth_timestamp, azimuth_valid, channel_block,
+                        channel_range, unpack, azimuth_encoder_count,
+                        azimuth_frame_id)
 
 # The OS-16 will still contain 64 channels in the packet, but only
 # every 4th channel starting at the 2nd will contain data .
@@ -28,8 +19,7 @@ class UninitializedTrigTable(Exception):
         msg = (
             "You must build_trig_table prior to calling xyz_point or"
             "xyz_points.\n\n"
-            "This is likely because you are in a multiprocessing environment."
-        )
+            "This is likely because you are in a multiprocessing environment.")
         super(UninitializedTrigTable, self).__init__(msg)
 
 
@@ -39,13 +29,11 @@ _trig_table = []
 def build_trig_table(beam_altitude_angles, beam_azimuth_angles):
     if not _trig_table:
         for i in range(CHANNEL_BLOCK_COUNT):
-            _trig_table.append(
-                [
-                    math.sin(beam_altitude_angles[i] * math.radians(1)),
-                    math.cos(beam_altitude_angles[i] * math.radians(1)),
-                    beam_azimuth_angles[i] * math.radians(1),
-                ]
-            )
+            _trig_table.append([
+                math.sin(beam_altitude_angles[i] * math.radians(1)),
+                math.cos(beam_altitude_angles[i] * math.radians(1)),
+                beam_azimuth_angles[i] * math.radians(1),
+            ])
 
 
 def xyz_point(channel_n, azimuth_block):

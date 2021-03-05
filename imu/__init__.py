@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from imu.core import OS1
+from imu.core import OS1_IMU

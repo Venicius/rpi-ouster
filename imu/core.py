@@ -5,20 +5,23 @@ import socket
 import time
 from functools import partial
 
-from os1.server import RequestHandler, UDPServer, ThreadingUDPServer
-from os1.utils import build_trig_table
+from imu.server import RequestHandler, UDPServer, ThreadingUDPServer
+from imu.utils import build_trig_table
 
 
 class OS1ConfigurationError(Exception):
     pass
 
 
-class OS1(object):
+class OS1_IMU(object):
     MODES = ("512x10", "512x20", "1024x10", "1024x20", "2048x10")
 
-    def __init__(
-        self, sensor_ip, dest_ip, udp_port=7502, tcp_port=7501, mode="2048x10"
-    ):
+    def __init__(self,
+                 sensor_ip,
+                 dest_ip,
+                 udp_port=7503,
+                 tcp_port=7501,
+                 mode="2048x10"):
         assert mode in self.MODES, "Mode must be one of {}".format(self.MODES)
         self.dest_host = dest_ip
         self.udp_port = udp_port

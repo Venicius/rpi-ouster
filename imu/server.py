@@ -1,6 +1,6 @@
 from socketserver import BaseRequestHandler, UDPServer, ThreadingUDPServer
 
-from os1.packet import PACKET_SIZE
+from imu.packet import PACKET_SIZE
 
 UDPServer.max_packet_size = PACKET_SIZE
 ThreadingUDPServer.max_packet_size = PACKET_SIZE
