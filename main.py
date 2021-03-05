@@ -1,5 +1,5 @@
 from os1 import OS1
-from os1.utils import xyz_points_raw
+from os1.utils import raw_values
 import os
 from datetime import datetime
 
@@ -8,7 +8,7 @@ def handler(raw_packet):
     filename = 'Raw_' + str(getdatetime()) + '.txt'
     print("Generating output in " + filename)
     with open(filename, 'a') as f:
-        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
+        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = raw_values(
             raw_packet)
 
         f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
