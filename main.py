@@ -1,6 +1,7 @@
 from os1 import OS1
 from imu import OS1_IMU
-from os1.utils import xyz_points, xyz_points_raw
+from imu.utils import data_imu
+from os1.utils import xyz_points_raw
 import csv
 import os
 from datetime import datetime
@@ -27,30 +28,11 @@ def handler(raw_packet):
 
             
 def handlerImu(raw_packet):
-    filename = 'Raw_' + str(getDateTime()) + '.txt'
+    filename = 'Imu_' + str(getDateTime()) + '.txt'
     print("Generating output in " + filename)
     with open(filename, 'a') as f:
-        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = xyz_points_raw(
-            raw_packet)
-
-        # f.write(
-            # "channel | range | encoderCount | reflectivity | intensity | x | y | z | noise | timeStamp  | measurementID | frameID \n"
-        # )
-        # f.write("timeStamp: " + str(timeStamp[0]) + " measurementID: " +
-        #         str(measurementID[0]) + " frameID: " + str(frameID[0]) +
-        #         " amazimuthDataBlockStatus 1" + "\n")
-
-        for vetorDadosColetados in zip(ch, ch_range, encoderCount,
-                                       reflectivity, intensity, x, y, z,
-                                       noise):
-                                       if(ch==0):
-                                           f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
-
-            linhaImpressaNoArquivo = str(vetorDadosColetados)
-            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
-            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
-            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(')', ' ')
-            f.write(linhaImpressaNoArquivo + "\n")
+        packet = data_imu(raw_packet)
+        f.write(str(packet) + "\n")
 
 
 def getDateTime():
@@ -69,7 +51,7 @@ def startOuster():
 def startOusterImu():
     imu = OS1_IMU('10.5.5.86', '10.5.5.1', mode='1024x10')
     imu.start()
-    imu.run_forever(handler)
+    imu.run_forever(handlerImu)
 
 
 while True:
@@ -77,4 +59,5 @@ while True:
     response = os.system("ping -c 1 " + hostname)
     if response == 0:
         startOuster()
+        startOusterImu()
         break
