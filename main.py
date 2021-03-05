@@ -15,14 +15,14 @@ def handler(raw_packet):
                                        reflectivity, intensity, x, y, z,
                                        noise):
             if ch == 0:
-                f.write(
-                    "TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(
-                        frameID[0]) + "\n")
-        linhaImpressaNoArquivo = str(vetorDadosColetados)
-        linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
-        linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
-        linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(')', ' ')
-        f.write(linhaImpressaNoArquivo + "\n")
+                f.write("TimeStamp: " + str(timeStamp[0]) +
+                        " measurementID: " + str(measurementID[0]) +
+                        " frameID: " + str(frameID[0]) + "\n")
+            linhaImpressaNoArquivo = str(vetorDadosColetados)
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace('(', ' ')
+            linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(')', ' ')
+            f.write(linhaImpressaNoArquivo + "\n")
 
 
 def getdatetime():
