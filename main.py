@@ -29,7 +29,7 @@ def getdatetime():
 
 
 def startouster():
-    os1 = OS1('10.5.5.86', '10.5.5.1', mode='2048x10')
+    os1 = OS1('10.5.5.86', '10.5.5.1', mode='1024x10')
     os1.start()
     os1.run_forever(handler)
 
