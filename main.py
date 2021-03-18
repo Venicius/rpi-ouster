@@ -18,10 +18,7 @@ def worker(queue, beam_altitude_angles, beam_azimuth_angles):
     build_trig_table(beam_altitude_angles, beam_azimuth_angles)
     while True:
         packet = queue.get()
-        ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = raw_values(
-            packet)
-        print_lines(ch, ch_range, reflectivity, intensity, timeStamp,
-                    encoderCount, measurementID, frameID, x, y, z, noise)
+        print_binario(packet)
 
 
 def spawn_workers(n, worker, *args, **kwargs):
@@ -31,6 +28,13 @@ def spawn_workers(n, worker, *args, **kwargs):
         process.start()
         processes.append(process)
     return processes
+
+
+def print_binario(packet):
+    filename = 'Raw_' + str(get_date_time()) + 'bin.txt'
+    print("Gerando arquivo binario" + filename)
+    with open(filename, 'ab') as f:
+        f.writelines(packet)
 
 
 def print_lines(ch, ch_range, reflectivity, intensity, timeStamp, encoderCount,
