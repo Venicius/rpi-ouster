@@ -74,8 +74,8 @@ def raw_values(packet, os16=False):
     for b in range(AZIMUTH_BLOCK_COUNT):
         block = azimuth_block(b, packet)
 
-        if not azimuth_valid(block):
-            continue
+        # if not azimuth_valid(block):
+        #     continue
 
         for c in channels:
             channel = channel_block(c, block)
