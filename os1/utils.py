@@ -52,6 +52,14 @@ def xyz_point(channel_n, azimuth_block):
     return [x, y, z]
 
 
+def raw_packets(packet, os16=False):
+    channels = OS_16_CHANNELS if os16 else OS_128_CHANNELS
+    if not isinstance(packet, tuple):
+        packet = unpack(packet)
+
+    return packet
+
+
 def raw_values(packet, os16=False):
 
     channels = OS_16_CHANNELS if os16 else OS_128_CHANNELS
