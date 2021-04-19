@@ -11,8 +11,11 @@ def handler(raw_packet):
         ch, ch_range, reflectivity, intensity, timeStamp, encoderCount, measurementID, frameID, x, y, z, noise = raw_values(
             raw_packet)
 
-        f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " + str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
-        for vetorDadosColetados in zip(ch, ch_range, encoderCount, reflectivity, intensity, x, y, z noise):
+        f.write("TimeStamp: " + str(timeStamp[0]) + " measurementID: " +
+                str(measurementID[0]) + " frameID: " + str(frameID[0]) + "\n")
+        for vetorDadosColetados in zip(ch, ch_range, encoderCount,
+                                       reflectivity, intensity, x, y, z,
+                                       noise):
 
             linhaImpressaNoArquivo = str(vetorDadosColetados)
             linhaImpressaNoArquivo = linhaImpressaNoArquivo.replace(',', ' ')
