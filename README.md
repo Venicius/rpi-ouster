@@ -63,3 +63,11 @@ O número ip fornecido no resultado acima, deve ser utilizado no scritp para cap
 
 Para testar se a conexão está ok, basta enviar um ping:
 ` ping <NUMERO IP>`
+
+## Instalação do SDK python
+
+python3 -m pip install ouster-sdk
+
+### Link para testes do sdk
+
+https://static.ouster.dev/sdk-docs/examples.html#recording-sensor-data
