@@ -71,3 +71,7 @@ python3 -m pip install ouster-sdk
 ### Link para testes do sdk
 
 https://static.ouster.dev/sdk-docs/examples.html#recording-sensor-data
+
+
+### instalações
+sudo pip3 install matplotlib
