@@ -1,5 +1,3 @@
-# ouster-lidar-rpi
-
 ### Configuração do Raspberry pi 4
 
 #### Ip do Raspberry pi
